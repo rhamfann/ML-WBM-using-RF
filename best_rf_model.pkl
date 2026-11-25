@@ -1,0 +1,20 @@
+import gzip
+import pickle
+from google.colab import files
+
+# Kompresi ulang model untuk memastikan filenya fresh
+compressed_model_filename = 'best_rf_model.pkl.gz'
+with gzip.open(compressed_model_filename, 'wb') as f:
+    pickle.dump(best_rf_model, f)
+
+print("Memicu proses unduhan untuk 3 file secara terpisah...")
+print("1. app.py")
+files.download('app.py')
+
+print("2. requirements.txt")
+files.download('requirements.txt')
+
+print("3. best_rf_model.pkl.gz")
+files.download('best_rf_model.pkl.gz')
+
+print("\nSilakan periksa folder Download Anda (Mungkin browser akan meminta izin untuk mengunduh banyak file sekaligus).")
