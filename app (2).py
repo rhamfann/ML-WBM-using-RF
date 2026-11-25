@@ -1,7 +1,7 @@
+%%writefile app.py
 import streamlit as st
 import pandas as pd
 import pickle
-import gzip
 import numpy as np
 
 # Set judul aplikasi
@@ -10,23 +10,16 @@ st.set_page_config(page_title='WBM Rheology Predictor', layout='wide')
 st.title('Mud Properties Prediction Dashboard (WBM)')
 st.markdown('Aplikasi ini memprediksi PV, YP, dan Gels menggunakan model Random Forest.')
 
-# Load model dengan penanganan otomatis jika file diekstrak oleh browser
+# Load model
 @st.cache_resource
 def load_model():
-    try:
-        # Mencoba membaca sebagai file kompresi gzip
-        with gzip.open('best_rf_model.pkl.gz', 'rb') as f:
-            return pickle.load(f)
-    except OSError:
-        # Jika gagal (BadGzipFile), berarti browser sudah mengekstraknya otomatis saat download
-        # Kita baca sebagai file pickle biasa
-        with open('best_rf_model.pkl.gz', 'rb') as f:
-            return pickle.load(f)
+    with open('best_rf_model_compressed.pkl', 'rb') as f:
+        return pickle.load(f)
 
 try:
     model = load_model()
 except FileNotFoundError:
-    st.error('File model (best_rf_model.pkl.gz) tidak ditemukan.')
+    st.error('File model (best_rf_model_compressed.pkl) tidak ditemukan.')
     st.stop()
 
 # Sidebar untuk Input
